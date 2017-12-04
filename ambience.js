@@ -8,14 +8,15 @@ Tone.Transport.bpm.value = 120;
 
 var chords = [
   ["C4","E4","G4"],
-  ["A3","C4","E4"]
+  ["A3","C4","E4"],
+  ["C4","F4","A4"]
 ];
 var chordNum = 0;
 var loop = new Tone.Loop(function(time) {
   for(var i = 0; i < chords[chordNum].length; i++) {
     synths[i].triggerAttackRelease(chords[chordNum][i], "4n", time);
   }
-  if(Math.random()>0.9) chordNum = (chordNum + 1)%2;
+  if(Math.random()>0.7) chordNum = (chordNum + 1)%3;
 }, "2n");
 loop.start("1m");
 Tone.Transport.start();
