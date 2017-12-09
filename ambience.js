@@ -16,7 +16,11 @@ function constructMelody(chord) {
   while(elapsed < 8) {
     thisLength = Math.ceil(Math.random() * 4);
     thisNote = Math.floor(Math.random() * melodyNotes.length);
-    melody.push([melodyNotes[thisNote], thisLength.toString()+"n", elapsed.toString()+"n"]);
+    melody.push([
+		melodyNotes[thisNote],
+		"8n",
+		"0:"+elapsed.toString()
+	]);
     elapsed += thisLength;
   }
   return melody;
