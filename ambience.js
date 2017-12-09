@@ -18,7 +18,7 @@ function constructMelody(chord) {
     thisNote = Math.floor(Math.random() * melodyNotes.length);
     melody.push([
 		melodyNotes[thisNote],
-		"8n",
+		"0:"+thisLength.toString(),
 		"0:"+elapsed.toString()
 	]);
     elapsed += thisLength;
