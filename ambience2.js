@@ -29,10 +29,11 @@ function AmbientChannel(channelType, barsToCompose) {
   }
   
   this.doComposition = function() {
+	// todo: turn "note queue" into "event queue", where each event is just a time and some json data
 	this.noteQueue = []; // reset note queue
     switch(channelType) {
       case "config":
-      
+      if(Math.random()>0.8) Tone.Transport.bpm.value = 50+200*Math.random(); // this wouldn't really happen here, only an event would be created here
       break;
       
       case "chords":
