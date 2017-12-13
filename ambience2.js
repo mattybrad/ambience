@@ -5,18 +5,22 @@ var channels = []; // will hold refs to config channel, chords, melody, and perc
 function AmbientChannel(channelType, barsToCompose) {
   this.barsToCompose = barsToCompose; // number of bars to schedule at once
   this.nextComposition = 0; // time (in ticks) when more scheduling needs to happen
+  this.noteQueue = [];
+  this.noteQueueStep = 0;
   this.doComposition = function() {
+	this.noteQueue = []; // reset note queue
     switch(channelType) {
       case "config":
       
       break;
       
       case "chords":
-      console.log("CHORDS");
+      
       break;
       
       case "melody":
-      console.log("MELODY");
+      this.noteQueue.push([0,"C4"]);
+      this.noteQueue.push([1,"E4"]);
       break;
       
       case "percussion":
@@ -39,7 +43,14 @@ var schedulingLoop = new Tone.Loop(function(time) {
     if(Tone.Transport.ticks>=c.nextComposition) {
       c.nextComposition += c.barsToCompose * Tone.Transport.timeSignature * Tone.Transport.PPQ
       c.doComposition();
+	  c.noteQueueStep = 0;
     }
+	var n;
+	for(var j = 0; j < c.noteQueue.length; j ++) {
+		n = c.noteQueue[j];
+		if(n[0] == c.noteQueueStep) console.log(n[1]);
+	}
+	c.noteQueueStep ++;
   }
 }, "4n");
 schedulingLoop.start();
