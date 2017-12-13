@@ -13,12 +13,12 @@ function constructMelody(chord) {
   var melody = [];
   var elapsed = 1;
   var thisLength, thisNote;
-  while(elapsed < 8) {
+  while(elapsed < 64) {
     thisLength = Math.ceil(Math.random() * 4);
     thisNote = Math.floor(Math.random() * melodyNotes.length);
     melody.push([
 		melodyNotes[thisNote],
-		"0:"+thisLength.toString(),
+		"0:0:"+(thisLength*4-1).toString(),
 		"0:"+elapsed.toString()
 	]);
     elapsed += thisLength;
@@ -36,19 +36,12 @@ for(var i = 0; i < m.length; i ++) {
 
 Tone.Transport.start();
 
-/*
-var chords = [
-  ["C4","E4","G4"],
-  ["A3","C4","E4"],
-  ["C4","F4","A4"]
-];
-var chordNum = 0;
-var loop = new Tone.Loop(function(time) {
-  for(var i = 0; i < chords[chordNum].length; i++) {
-    synths[i].triggerAttackRelease(chords[chordNum][i], "4n", time);
-  }
-  if(Math.random()>0.7) chordNum = (chordNum + 1)%3;
-}, "2n");
-loop.start("1m");
-Tone.Transport.start();
-*/
+var tempoSlider = document.getElementById('tempo');
+tempoSlider.addEventListener('change', function(ev) {
+	Tone.Transport.bpm.value = tempoSlider.value;
+});
+
+var loop = new Tone.Loop(function(time){
+	//s.triggerAttackRelease("C1", "8n", time)
+}, "4n")
+loop.start(0);
