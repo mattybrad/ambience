@@ -3,6 +3,8 @@ var channels = []; // will hold refs to config channel, chords, melody, and perc
 
 // synths
 var chordSynth = new Tone.PolySynth(4, Tone.Synth).toMaster();
+var percussionSynth = new Tone.NoiseSynth().toMaster();
+var melodySynth = new Tone.Synth().toMaster();
 
 // other stuff
 var knownChordSequences = [
@@ -18,6 +20,8 @@ var chordNotes = {
   "G": ["G4","B4","D4"],
   "Am": ["A4","C4","E4"]
 }
+var melodyNotes = ["C4","D4","E4","F4","G4","A4","B4","C5"];
+
 
 // channel class
 function AmbientChannel(channelType, barsToCompose) {
@@ -37,21 +41,43 @@ function AmbientChannel(channelType, barsToCompose) {
       console.log("COMPOSE CHORDS");
       // in future, take account of previous chords
       var thisChordSequence = _.sample(knownChordSequences);
+      console.log(thisChordSequence);
       for(var i = 0; i < thisChordSequence.length; i++) {
         chordSynth.triggerAttackRelease(
           chordNotes[thisChordSequence[i]],
           "1n",
-          "+"+i.toString()+"*1n"
+          "+"+i.toString()+"*1n",
+          0.1
         );
       }
       break;
       
       case "melody":
       console.log("COMPOSE MELODY");
+      var melody = [];
+      var elapsed = 1;
+      var thisLength, thisNote;
+      while(elapsed < 8) {
+        thisLength = Math.ceil(Math.random() * 4);
+        thisNote = Math.floor(Math.random() * melodyNotes.length);
+        melody.push([
+          melodyNotes[thisNote],
+          "8n",
+          "+0:"+elapsed.toString()
+        ]);
+        elapsed += thisLength;
+      }
+      var s = melodySynth, m = melody;
+      for(var i = 0; i < m.length; i ++) {
+        s.triggerAttackRelease(m[i][0], m[i][1], m[i][2]);
+      }
       break;
       
       case "percussion":
-      
+      console.log("COMPOSE PERCUSSION");
+      for(var i = 0; i < 16; i ++) {
+        percussionSynth.triggerAttackRelease("32n","+"+i+"*16n");
+      }
       break;
     }
   }
