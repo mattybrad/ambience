@@ -55,15 +55,15 @@ function AmbientChannel(channelType, barsToCompose) {
       case "melody":
       console.log("COMPOSE MELODY");
       var melody = [];
-      var elapsed = 1;
+      var elapsed = 0;
       var thisLength, thisNote;
-      while(elapsed < 8) {
+      while(elapsed < 16) {
         thisLength = Math.ceil(Math.random() * 4);
         thisNote = Math.floor(Math.random() * melodyNotes.length);
         melody.push([
           melodyNotes[thisNote],
           "8n",
-          "+0:"+elapsed.toString()
+          "+"+elapsed+"*8n"
         ]);
         elapsed += thisLength;
       }
@@ -76,7 +76,7 @@ function AmbientChannel(channelType, barsToCompose) {
       case "percussion":
       console.log("COMPOSE PERCUSSION");
       for(var i = 0; i < 16; i ++) {
-        percussionSynth.triggerAttackRelease("32n","+"+i+"*16n");
+        percussionSynth.triggerAttackRelease("32n","+"+i+"*16n",0.05);
       }
       break;
     }
