@@ -96,7 +96,14 @@ var schedulingLoop = new Tone.Loop(function(time) {
     if(Tone.Transport.ticks>=c.nextComposition) {
       c.nextComposition += c.barsToCompose * Tone.Transport.timeSignature * Tone.Transport.PPQ
       c.doComposition();
+	  c.noteQueueStep = 0;
     }
+	var n;
+	for(var j = 0; j < c.noteQueue.length; j ++) {
+		n = c.noteQueue[j];
+		if(n[0] == c.noteQueueStep) c.playNote(n);
+	}
+	c.noteQueueStep ++;
   }
 }, "4n");
 schedulingLoop.start();
