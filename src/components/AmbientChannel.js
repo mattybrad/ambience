@@ -4,14 +4,13 @@ class AppComponent {
   constructor(channelType) {
     this.channelType = channelType;
     this.scheduledEvents = [];
-    console.log("init channel: " + this.channelType);
   }
 
-  createEvents() {
+  createEvents(time) {
 
     switch(this.channelType) {
-      case "chords":
-      console.log("create chords");
+      case 'chords':
+      console.log('create chords ' + time);
       this.scheduledEvents.push(
 
       );

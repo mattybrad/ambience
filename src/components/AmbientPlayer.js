@@ -4,8 +4,6 @@ import AmbientChannel from './AmbientChannel';
 
 class AppComponent extends React.Component {
   componentDidMount() {
-    this.scheduledTo = 0;
-    this.scheduleWindow = 6000;
 
     this.channels = [
       new AmbientChannel('meta'),
@@ -18,16 +16,13 @@ class AppComponent extends React.Component {
     ]
 
     Tone.Transport.start();
-    setInterval(this.doScheduling.bind(this), 5000);
-    this.doScheduling();
+    var scheduleLoop = new Tone.Loop(this.doScheduling.bind(this), '4m'); // adjust 16n later to respresent 4 bars regardless of time signature
+    scheduleLoop.start();
   }
 
-  doScheduling() {
-    if(this.scheduledTo < Date.now() + this.scheduleWindow) {
-      for(var i = 0; i < this.channels.length; i ++) {
-        this.channels[i].createEvents();
-      }
-      this.scheduledTo = Date.now() + this.scheduleWindow;
+  doScheduling(time) {
+    for(var i = 0; i < this.channels.length; i ++) {
+      this.channels[i].createEvents(time);
     }
   }
 
