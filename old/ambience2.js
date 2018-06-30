@@ -31,12 +31,12 @@ function AmbientChannel(channelType, barsToCompose) {
   this.currentSequence = null;
   this.doComposition = function() {
     this.previousSequence = this.currentSequence;
-    
+
     switch(channelType) {
       case "config":
-      
+
       break;
-      
+
       case "chords":
       console.log("COMPOSE CHORDS");
       // in future, take account of previous chords
@@ -51,7 +51,7 @@ function AmbientChannel(channelType, barsToCompose) {
         );
       }
       break;
-      
+
       case "melody":
       console.log("COMPOSE MELODY");
       var melody = [];
@@ -72,7 +72,7 @@ function AmbientChannel(channelType, barsToCompose) {
         s.triggerAttackRelease(m[i][0], m[i][1], m[i][2]);
       }
       break;
-      
+
       case "percussion":
       console.log("COMPOSE PERCUSSION");
       for(var i = 0; i < 16; i ++) {
@@ -96,14 +96,14 @@ var schedulingLoop = new Tone.Loop(function(time) {
     if(Tone.Transport.ticks>=c.nextComposition) {
       c.nextComposition += c.barsToCompose * Tone.Transport.timeSignature * Tone.Transport.PPQ
       c.doComposition();
-	  c.noteQueueStep = 0;
+	    c.noteQueueStep = 0;
     }
-	var n;
-	for(var j = 0; j < c.noteQueue.length; j ++) {
-		n = c.noteQueue[j];
-		if(n[0] == c.noteQueueStep) c.playNote(n);
-	}
-	c.noteQueueStep ++;
+	  var n;
+	  for(var j = 0; j < c.noteQueue.length; j ++) {
+		    n = c.noteQueue[j];
+		    if(n[0] == c.noteQueueStep) c.playNote(n);
+	  }
+	  c.noteQueueStep ++;
   }
 }, "4n");
 schedulingLoop.start();
