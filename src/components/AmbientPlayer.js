@@ -14,6 +14,7 @@ class AppComponent extends React.Component {
       new AmbientChannel('harmony'),
       new AmbientChannel('sfx')
     ]
+    window.e = this.channels[2].scheduledEvents;
 
     Tone.Transport.start();
     var scheduleLoop = new Tone.Loop(this.doScheduling.bind(this), '4m'); // adjust 16n later to respresent 4 bars regardless of time signature
