@@ -18,17 +18,32 @@ class AppComponent {
       'G': ['G4','B4','D4'],
       'Am': ['A4','C4','E4']
     }
+    this.melodyNotes = ["C4","D4","E4","F4","G4","A4","B4","C5"];
 
     if(this.channelType == 'chords') {
       this.testSynth = new Tone.PolySynth(6, Tone.Synth).toMaster();
       this.testSynth.set({
         envelope: {
-          attack: 0.5,
+          attack: 0.1,
           release: 3,
           sustain: 1
         },
-        volume: -10
+        volume: -25,
+        oscillator: {
+          type: 'square'
+        }
       });
+    }
+
+    if(this.channelType == 'melody') {
+      this.melodySynth = new Tone.Synth({
+        oscillator: {
+          type: 'triangle'
+        },
+        envelope: {
+          release: 1
+        }
+      }).toMaster();
     }
   }
 
@@ -53,7 +68,25 @@ class AppComponent {
 
       case 'melody':
       var testChord = AppComponent.chordChannel.getChordAtTime(time);
-      console.log(testChord);
+
+      var melody = [];
+      var elapsed = 0;
+      var thisLength, thisNote;
+      while(elapsed < 16) {
+        thisLength = Math.ceil(Math.random() * 4);
+        thisNote = Math.floor(Math.random() * this.melodyNotes.length);
+        melody.push([
+          this.melodyNotes[thisNote],
+          "8n",
+          "+0:0:"+(elapsed*4)
+        ]);
+        elapsed += thisLength;
+      }
+      var s = this.melodySynth, m = melody;
+      console.log(m);
+      for(var i = 0; i < m.length; i ++) {
+        s.triggerAttackRelease(m[i][0], m[i][1], m[i][2]);
+      }
       break;
     }
   }
