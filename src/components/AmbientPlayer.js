@@ -14,6 +14,8 @@ class AppComponent extends React.Component {
       new AmbientChannel('harmony'),
       new AmbientChannel('sfx')
     ]
+    AmbientChannel.chordChannel = this.channels[2];
+    window.Tone = Tone;
     window.e = this.channels[2].scheduledEvents;
 
     Tone.Transport.start();
