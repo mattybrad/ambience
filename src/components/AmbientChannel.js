@@ -16,9 +16,9 @@ class AppComponent {
       'Em': ['E4','G4','B4'],
       'F': ['F4','A4','C4'],
       'G': ['G4','B4','D4'],
-      'Am': ['A4','C4','E4']
+      'Am': ['A3','C4','E4']
     }
-    this.melodyNotes = ["C4","D4","E4","F4","G4","A4","B4","C5"];
+    this.melodyNotes = ['C4','D4','E4','F4','G4','A4','B4','C5'];
 
     if(this.channelType == 'chords') {
       this.testSynth = new Tone.PolySynth(6, Tone.Synth).toMaster();
@@ -52,6 +52,7 @@ class AppComponent {
     switch(this.channelType) {
       case 'chords':
       // temp, proof of concept...
+      var newChords = [];
       var thisSequence = this.knownChordSequences[Math.floor(Math.random()*this.knownChordSequences.length)];
       for(var i = 0; i < thisSequence.length; i ++) {
         var chord = new Tone.Event(function(time, chord){
@@ -63,31 +64,41 @@ class AppComponent {
         // would be better to use Tone events as single source of truth, but no obvious documented way to do so(?)
         // this will do for now:
         this.logEvent('chord', Tone.TimeBase(time) + Tone.TimeBase(i+':0:0'), this.chordNotes[thisSequence[i]]);
+        newChords.push(this.chordNotes[thisSequence[i]].join(''));
       }
+      console.log('new chords scheduled: ' + newChords.join(', '));
       break;
 
       case 'melody':
-      var testChord = AppComponent.chordChannel.getChordAtTime(time);
-
       var melody = [];
       var elapsed = 0;
       var thisLength, thisNote;
       while(elapsed < 16) {
+        var testChord = AppComponent.chordChannel.getChordAtTime(Tone.Time('+0:0:'+(elapsed*4)).toSeconds());
         thisLength = Math.ceil(Math.random() * 4);
-        thisNote = Math.floor(Math.random() * this.melodyNotes.length);
+        thisNote = this.getMelodyNoteFromChord(testChord ? testChord.data : null);
         melody.push([
-          this.melodyNotes[thisNote],
-          "8n",
-          "+0:0:"+(elapsed*4)
+          thisNote,
+          '0:0:'+(thisLength*3.5),
+          '+0:0:'+(elapsed*4)
         ]);
         elapsed += thisLength;
       }
       var s = this.melodySynth, m = melody;
-      console.log(m);
       for(var i = 0; i < m.length; i ++) {
         s.triggerAttackRelease(m[i][0], m[i][1], m[i][2]);
       }
       break;
+    }
+  }
+
+  getMelodyNoteFromChord(chord) {
+    if(Math.random() < 0.7 && chord != null) {
+      var chordNote = chord[Math.floor(Math.random()*chord.length)];
+      return chordNote;
+    } else {
+      var randomNote = this.melodyNotes[Math.floor(Math.random()*this.melodyNotes.length)];
+      return randomNote;
     }
   }
 
@@ -107,9 +118,9 @@ class AppComponent {
   getChordAtTime(time) {
     var foundChordIndex = -1;
     for(var i = this.scheduledEvents.length - 1; i >= 0; i --) {
-      if(time <= this.scheduledEvents[i].time) foundChordIndex = i;
+      if(time < this.scheduledEvents[i].time) foundChordIndex = i;
     }
-    return foundChordIndex >= 0 ? this.scheduledEvents[foundChordIndex] : null;
+    return foundChordIndex >= 0 ? this.scheduledEvents[foundChordIndex-1] : this.scheduledEvents[this.scheduledEvents.length-1];
   }
 
 }
