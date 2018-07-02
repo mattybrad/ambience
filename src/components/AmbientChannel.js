@@ -56,7 +56,7 @@ class AppComponent {
       var thisSequence = this.knownChordSequences[Math.floor(Math.random()*this.knownChordSequences.length)];
       for(var i = 0; i < thisSequence.length; i ++) {
         var chord = new Tone.Event(function(time, chord){
-          this.testSynth.triggerAttackRelease(chord, '2n');
+          this.testSynth.triggerAttackRelease(chord, '0:3:0');
         }.bind(this), this.chordNotes[thisSequence[i]]);
         chord.start('+'+i+'m');
 
@@ -75,7 +75,7 @@ class AppComponent {
       var thisLength, thisNote;
       while(elapsed < 16) {
         var testChord = AppComponent.chordChannel.getChordAtTime(Tone.Time('+0:0:'+(elapsed*4)).toSeconds());
-        thisLength = Math.ceil(Math.random() * 4);
+        thisLength = 0.5 * Math.ceil(Math.random() * 4);
         thisNote = this.getMelodyNoteFromChord(testChord ? testChord.data : null);
         melody.push([
           thisNote,
